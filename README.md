@@ -1,6 +1,11 @@
-# verdaccio-ldap [![Build Status](https://travis-ci.org/Alexandre-io/verdaccio-ldap.svg?branch=master)](https://travis-ci.org/Alexandre-io/verdaccio-ldap) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b15683d154d44347bccc4360d48436a7)](https://www.codacy.com/app/alexandre_io/verdaccio-ldap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Alexandre-io/verdaccio-ldap&amp;utm_campaign=Badge_Grade) [![Greenkeeper badge](https://badges.greenkeeper.io/Alexandre-io/verdaccio-ldap.svg)](https://greenkeeper.io/)
+# verdaccio-ldap
 
-`verdaccio-ldap` is a fork of `sinopia-ldap`. It aims to keep backwards compatibility with `sinopia`, while keeping up with npm changes.
+`verdaccio-ldap-extended` is a fork of [verdaccio-ldap](https://github.com/tutu-ru/verdaccio-ldap) which is a fork of `sinopia-ldap` that aims to keep backwards compatibility with `sinopia`, while keeping up with npm changes.
+
+## Differences with parent
+
+Differs with [verdaccio-ldap](https://github.com/tutu-ru/verdaccio-ldap) in accounting ALL of user's groups instead of only root ones: [ldapauth#a3b6310a](https://github.com/tutu-ru/node-ldapauth-fork/commit/a3b6310a9df25f6181af3a804cc984b97ec01c13)
+
 
 ## Installation
 
@@ -17,7 +22,7 @@ Add to your `config.yaml`:
 
 ```yaml
 auth:
-  ldap:
+  'ldap-extended':
     type: ldap
     client_options:
       url: "ldaps://ldap.example.com"
@@ -47,7 +52,7 @@ auth:
 It's called as:
 
 ```js
-require('verdaccio-ldap')(config, stuff)
+require('verdaccio-ldap-extended')(config, stuff)
 ```
 
 Where:

@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 const rfc2253 = require('rfc2253');
-const LdapAuth = require('ldapauth-fork');
+const LdapAuth = require('ldapauth-extended');
 
 Promise.promisifyAll(LdapAuth.prototype);
 
@@ -22,7 +22,7 @@ function Auth(config, stuff) {
 
   // ldap client
   self._ldapClient = new LdapAuth(self._config.client_options);
-  
+
   self._ldapClient.on('error', (err) => {
     self._logger.warn({
       err: err,
@@ -43,12 +43,15 @@ Auth.prototype.authenticate = function (user, password, callback) {
     .then((ldapUser) => {
       if (!ldapUser) return [];
 
-      return [
+      const groups = [
         ldapUser.cn,
         // _groups or memberOf could be single els or arrays.
         ...ldapUser._groups ? [].concat(ldapUser._groups).map((group) => group.cn) : [],
         ...ldapUser.memberOf ? [].concat(ldapUser.memberOf).map((groupDn) => rfc2253.parse(groupDn).get('CN')) : [],
       ];
+
+      this._logger.debug(`[LDAP debug] ${user} groups are ${groups}`);
+      return groups;
     })
     .catch((err) => {
       // 'No such user' is reported via error
