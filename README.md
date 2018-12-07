@@ -24,6 +24,9 @@ Add to your `config.yaml`:
 auth:
   'ldap-extended':
     type: ldap
+    # Optional
+    # If set, the outcome of plugin would consider these groups only (cut off unimportant LDAP groups)
+    considerableGroups: ['groupA', 'groupB']
     client_options:
       url: "ldaps://ldap.example.com"
       # Only required if you need auth to bind

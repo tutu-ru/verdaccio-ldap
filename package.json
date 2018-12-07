@@ -1,6 +1,6 @@
 {
   "name": "verdaccio-ldap-extended",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "LDAP auth plugin for verdaccio",
   "author": "Evgeniy Semenov <semenov@tutu.ru>",
   "repository": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "bluebird": "~3.5.1",
-    "ldapauth-extended": "^1.0.0",
+    "ldapauth-extended": "^1.0.2",
     "rfc2253": "~0.1.1"
   },
   "devDependencies": {

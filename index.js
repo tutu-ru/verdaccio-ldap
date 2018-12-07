@@ -50,7 +50,14 @@ Auth.prototype.authenticate = function (user, password, callback) {
         ...ldapUser.memberOf ? [].concat(ldapUser.memberOf).map((groupDn) => rfc2253.parse(groupDn).get('CN')) : [],
       ];
 
-      this._logger.debug(`[LDAP debug] ${user} groups are ${groups}`);
+      this._logger.debug(`[LDAP debug] ${user} groups are ${groups.join('\n\t')}`);
+
+      // there may be too many unimportant groups
+      // we'll cut them off
+      if (this._config.considerableGroups && this._config.considerableGroups.length > 0) {
+        this._logger.debug(`[LDAP debug] Considering only ${this._config.considerableGroups} groups`);
+        return groups.filter(g => this._config.considerableGroups.includes(g));
+      }
       return groups;
     })
     .catch((err) => {
