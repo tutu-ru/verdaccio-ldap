@@ -43,22 +43,28 @@ Auth.prototype.authenticate = function (user, password, callback) {
     .then((ldapUser) => {
       if (!ldapUser) return [];
 
-      const groups = [
-        ldapUser.cn,
+      const originalGroups = [
         // _groups or memberOf could be single els or arrays.
         ...ldapUser._groups ? [].concat(ldapUser._groups).map((group) => group.cn) : [],
         ...ldapUser.memberOf ? [].concat(ldapUser.memberOf).map((groupDn) => rfc2253.parse(groupDn).get('CN')) : [],
       ];
 
-      this._logger.debug(`[LDAP debug] ${user} groups are ${groups.join('\n\t')}`);
+      let groups = [];
+
+      this._logger.debug(`[LDAP debug] ${user} groups are ${ldapUser.cn} and ${originalGroups.join('\n\t')}`);
 
       // there may be too many unimportant groups
       // we'll cut them off
       if (this._config.considerableGroups && this._config.considerableGroups.length > 0) {
         this._logger.debug(`[LDAP debug] Considering only ${this._config.considerableGroups} groups`);
-        return groups.filter(g => this._config.considerableGroups.includes(g));
+        groups = originalGroups.filter(g => this._config.considerableGroups.includes(g));
+      } else {
+        groups = originalGroups;
       }
-      return groups;
+
+      this._logger.debug(`[LDAP debug] ${user} result groups are ${[ldapUser.cn, ...groups].join(', ')}`);
+
+      return [ldapUser.cn, ...groups];
     })
     .catch((err) => {
       // 'No such user' is reported via error
